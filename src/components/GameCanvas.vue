@@ -47,6 +47,7 @@ const ship = ref({
   vx: 0,
   vy: 0,
   angle: 0,
+  angularVelocity: 0,
   width: 30,
   height: 40,
 });
@@ -143,6 +144,7 @@ function initGame() {
       station.value.dockingPort.x - ship.value.x,
     ) +
     Math.PI / 2;
+  ship.value.angularVelocity = 0;
   thrustParticles.value = [];
 
   initObstacles();
@@ -187,6 +189,12 @@ function checkObstacleCollision() {
   return false;
 }
 
+function normalizeAngle(angle) {
+  while (angle > Math.PI) angle -= Math.PI * 2;
+  while (angle < -Math.PI) angle += Math.PI * 2;
+  return angle;
+}
+
 function updatePhysics(dt) {
   if (props.gameState !== "playing") return;
 
@@ -194,6 +202,9 @@ function updatePhysics(dt) {
   const thrustPower = props.shipConfig.thrustPower || 0.08;
   const maxSpeed = props.shipConfig.maxSpeed || 8;
   const damping = Math.pow(DAMPING_BASE, 1 / mass);
+  const rotationAccel = props.shipConfig.rotationAccel || 0.08;
+  const maxAngVel = props.shipConfig.maxAngularVelocity || 0.15;
+  const rotationDamping = props.shipConfig.rotationDamping || 0.94;
 
   ship.value.vx += (props.thrust.x * thrustPower) / mass;
   ship.value.vy += (props.thrust.y * thrustPower) / mass;
@@ -210,10 +221,22 @@ function updatePhysics(dt) {
   ship.value.x += ship.value.vx;
   ship.value.y += ship.value.vy;
 
-  if (Math.abs(props.thrust.x) > 0.1 || Math.abs(props.thrust.y) > 0.1) {
-    ship.value.angle = Math.atan2(props.thrust.y, props.thrust.x) + Math.PI / 2;
+  const hasThrust =
+    Math.abs(props.thrust.x) > 0.1 || Math.abs(props.thrust.y) > 0.1;
+  if (hasThrust) {
+    const targetAngle =
+      Math.atan2(props.thrust.y, props.thrust.x) + Math.PI / 2;
+    let angleDiff = normalizeAngle(targetAngle - ship.value.angle);
+    ship.value.angularVelocity += angleDiff * rotationAccel;
     spawnThrustParticle();
   }
+
+  if (Math.abs(ship.value.angularVelocity) > maxAngVel) {
+    ship.value.angularVelocity =
+      Math.sign(ship.value.angularVelocity) * maxAngVel;
+  }
+  ship.value.angularVelocity *= rotationDamping;
+  ship.value.angle += ship.value.angularVelocity;
 
   if (ship.value.x < -50) ship.value.x = CANVAS_WIDTH + 50;
   if (ship.value.x > CANVAS_WIDTH + 50) ship.value.x = -50;

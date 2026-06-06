@@ -72,8 +72,22 @@ const thrust = computed(() => {
   return { x, y };
 });
 
+const GAME_KEYS = [
+  "arrowup",
+  "arrowdown",
+  "arrowleft",
+  "arrowright",
+  "w",
+  "a",
+  "s",
+  "d",
+];
+
 function handleKeyDown(e) {
   const key = e.key.toLowerCase();
+  if (GAME_KEYS.includes(key)) {
+    e.preventDefault();
+  }
   if (key === "arrowup" || key === "w") keys.value.up = true;
   if (key === "arrowdown" || key === "s") keys.value.down = true;
   if (key === "arrowleft" || key === "a") keys.value.left = true;
@@ -82,6 +96,9 @@ function handleKeyDown(e) {
 
 function handleKeyUp(e) {
   const key = e.key.toLowerCase();
+  if (GAME_KEYS.includes(key)) {
+    e.preventDefault();
+  }
   if (key === "arrowup" || key === "w") keys.value.up = false;
   if (key === "arrowdown" || key === "s") keys.value.down = false;
   if (key === "arrowleft" || key === "a") keys.value.left = false;

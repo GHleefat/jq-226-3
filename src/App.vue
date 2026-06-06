@@ -12,6 +12,9 @@ const SHIP_TYPES = {
     mass: 0.6,
     thrustPower: 0.12,
     maxSpeed: 10,
+    rotationAccel: 0.15,
+    maxAngularVelocity: 0.25,
+    rotationDamping: 0.92,
     color: "#48bb78",
     difficulty: "简单",
   },
@@ -22,6 +25,9 @@ const SHIP_TYPES = {
     mass: 1.0,
     thrustPower: 0.08,
     maxSpeed: 8,
+    rotationAccel: 0.08,
+    maxAngularVelocity: 0.15,
+    rotationDamping: 0.94,
     color: "#63b3ed",
     difficulty: "普通",
   },
@@ -32,6 +38,9 @@ const SHIP_TYPES = {
     mass: 1.8,
     thrustPower: 0.05,
     maxSpeed: 6,
+    rotationAccel: 0.035,
+    maxAngularVelocity: 0.08,
+    rotationDamping: 0.97,
     color: "#ed8936",
     difficulty: "困难",
   },
@@ -133,26 +142,31 @@ function handleObstacleModeChange(val) {
 
 <style scoped>
 .app-container {
-  min-height: 100vh;
+  height: 100vh;
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 24px;
-  padding: 24px;
+  gap: 20px;
+  padding: 16px;
   box-sizing: border-box;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  overflow: hidden;
 }
 
 .canvas-wrapper {
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
 }
 
 @media (max-width: 1400px) {
   .app-container {
-    flex-direction: column;
-    gap: 16px;
-    padding: 16px;
+    flex-direction: row;
+    gap: 12px;
+    padding: 10px;
+    overflow-x: auto;
+    overflow-y: hidden;
   }
 }
 </style>
