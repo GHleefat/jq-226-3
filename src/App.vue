@@ -142,16 +142,17 @@ function handleObstacleModeChange(val) {
 
 <style scoped>
 .app-container {
-  height: 100vh;
+  min-height: 100vh;
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 20px;
-  padding: 16px;
+  padding: 20px;
   box-sizing: border-box;
   flex-wrap: nowrap;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: auto;
 }
 
 .canvas-wrapper {
@@ -163,10 +164,10 @@ function handleObstacleModeChange(val) {
 @media (max-width: 1400px) {
   .app-container {
     flex-direction: row;
-    gap: 12px;
-    padding: 10px;
+    gap: 16px;
+    padding: 16px;
     overflow-x: auto;
-    overflow-y: hidden;
+    overflow-y: auto;
   }
 }
 </style>

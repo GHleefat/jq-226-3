@@ -13,9 +13,14 @@ const props = defineProps({
   shipConfig: {
     type: Object,
     default: () => ({
+      id: "standard",
+      name: "标准运输船",
       mass: 1.0,
       thrustPower: 0.08,
       maxSpeed: 8,
+      rotationAccel: 0.08,
+      maxAngularVelocity: 0.15,
+      rotationDamping: 0.94,
       color: "#63b3ed",
     }),
   },
@@ -651,6 +656,24 @@ watch(
   () => props.gameState,
   (newState, oldState) => {
     if (oldState !== "playing" && newState === "playing") {
+      initGame();
+    }
+  },
+);
+
+watch(
+  () => props.obstacleMode,
+  () => {
+    if (props.gameState === "playing") {
+      initGame();
+    }
+  },
+);
+
+watch(
+  () => props.shipConfig?.id,
+  () => {
+    if (props.gameState === "playing") {
       initGame();
     }
   },
